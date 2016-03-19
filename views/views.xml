@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+        <data>
+
+                <!--                           -->
+                <!-- Serial Numbers Tree View -->
+                <!--                           -->
+               <record id="view_component_group_search_form" model="ir.ui.view">
+                    <field name="name">project.component_group.search.form</field>
+                    <field name="model">project.component_group</field>
+                    <field name="arch" type="xml">
+                       <search string="Component Groups">
+                            <field name="name"/>
+                            <field name="project_id"/>
+                            <field name="component_ids"/>
+                            <field name="parent_group_id"/>
+                            <field name="sub_group_ids"/>
+                            <field name="serial_number"/>
+                            <field name="notes"/>
+                            <separator/>
+                            <group expand="0" string="Group By">
+                                <filter string="Project" name="project" context="{'group_by':'project_id'}"/>
+                                <filter string="Parent Group" context="{'group_by':'parent_group_id'}"/>
+                                <filter string="Customer" context="{'group_by':'partner_id'}"/>
+                            </group>
+                        </search>
+                    </field>
+                </record>
+
+
+               <record id="view_component_search_form" model="ir.ui.view">
+                    <field name="name">project.component.search.form</field>
+                    <field name="model">project.component</field>
+                    <field name="arch" type="xml">
+                       <search string="Components">
+                            <field name="name"/>
+                            <field name="group_id"/>
+                            <field name="model_type"/>
+                            <field name="serial_number"/>
+                            <field name="firmware_number"/>
+                            <field name="status"/>
+                            <field name="notes"/>
+                            <field name="category"/>
+<!--                        <field name="project_id"/> -->
+                            <field name="partner_id"/>
+                            <separator/>
+                            <filter string="Good Components" name="status_good" domain="[('status', '=', 'good')]"/>
+                            <filter string="Damaged Components" name="status_good" domain="[('status', '=', 'damaged')]"/>
+                            <filter string="Components with unknown status" name="status_unknown" domain="[('status', '=', 'unknown')]"/>
+                            <separator/>
+                            <filter string="Cameras" name="filter_cameras" domain="[('category', '=', 'camera')]"/>
+                            <filter string="PLC Cards" name="filter_cards" domain="[('category', '=', 'card')]"/>
+                            <filter string="Servos" name="filter_servos" domain="[('category', '=', 'servo')]"/>
+                            <filter string="Unknown Category" name="filter_other" domain="[('category', '=', 'other')]"/>
+                            <separator/>
+                            <group expand="0" string="Group By">
+<!--                            <filter string="Project" name="project" context="{'group_by':'project_id'}"/> -->
+                                <filter string="Category" context="{'group_by':'category'}"/>
+                                <filter string="Group" context="{'group_by':'group_id'}"/>
+                                <filter string="Status" name="status" context="{'group_by':'status'}"/>
+                                <filter string="Customer" context="{'group_by':'partner_id'}"/>
+                                <filter string="Model Type" context="{'group_by':'model_type'}"/>
+                            </group>
+                        </search>
+                    </field>
+                </record>
+
+                <record model="ir.ui.view" id="project_component_group_tree">
+                        <field name="name">Component Groups</field>
+                        <field name="model">project.component_group</field>
+                        <field name="arch" type="xml">
+                                <tree string="Component Groups" default_order='project_id desc,parent_group_id desc,name desc'>
+                                    <field name="project_id"/>
+                                    <field name="parent_group_id" invisible="True"/>
+                                    <field name="name"/>
+                                    <field name="component_ids"/>
+                                    <field name="sub_group_ids"/>
+                                    <field name="serial_number"/>
+                                    <field name="notes"/>
+                                    <field name="partner_id"/>
+                                </tree>
+                        </field>
+                </record>
+
+                <record model="ir.ui.view" id="project_component_tree">
+                        <field name="name">Components</field>
+                        <field name="model">project.component</field>
+                        <field name="arch" type="xml">
+                                <tree string="Component Serial Numbers" default_order='category'>
+                                    <field name="name"/>
+                                    <field name="group_id"/>
+                                    <field name="model_type"/>
+                                    <field name="serial_number"/>
+                                    <field name="firmware_number"/>
+                                    <field name="status"/>
+                                    <field name="notes"/>
+                                    <field name="category"/>
+                                    <field name="partner_id"/>
+                                </tree>
+                        </field>
+                </record>
+
+                <record model="ir.actions.act_window" id="action_serial_number_groups">
+                        <field name="name">project_serial_numbers</field>
+                        <field name="res_model">project.component_group</field>
+                        <field name="type">ir.actions.act_window</field>
+                        <field name="view_mode">tree,form</field>
+                        <field name="sequence" eval="0"/>
+                </record>
+
+                <record model="ir.actions.act_window" id="action_serial_number_components">
+                        <field name="name">project_serial_numbers</field>
+                        <field name="res_model">project.component</field>
+                        <field name="type">ir.actions.act_window</field>
+                        <field name="view_mode">tree,form</field>
+                        <field name="sequence" eval="0"/>
+                </record>
+
+                <menuitem name="Serial Numbers" parent="project.menu_project_management" id="project_serial_numbers_menu"/>
+                <menuitem name="Groups" parent="project_serial_numbers_menu" id="serial_numbers_components_menu" action="action_serial_number_groups" />
+                <menuitem name="Components" parent="project_serial_numbers_menu" id="serial_numbers_groups_menu" action="action_serial_number_components" />
+        </data>
+</openerp>
